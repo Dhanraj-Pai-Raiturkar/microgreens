@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2016",                       // ECMAScript target version for the TypeScript compiler
+    "module": "commonjs",                     // Defines the module system for the compiled code
+    "outDir": "./dist",                       // output will go to a "dist" directory in the project root
+    "esModuleInterop": true,                  // enables compatibility with code that uses ECMAScript modules and CommonJS modules together
+    "forceConsistentCasingInFileNames": true, // Enforces consistent casing in file names
+    "strict": true,                           // Enabling "strict" sets a variety of strict type checking options
+    "skipLibCheck": true                      // skips type checking of declaration files (*.d.ts). This can improve compilation performance
+  },
+  "include": ["./src/**/*.ts"],               // patterns that TypeScript should consider when compiling files
+  "exclude": ["node_modules"]                 // patterns for files or directories that TypeScript should exclude from compilation
+}
