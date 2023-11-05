@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import router from '../routes/index';
 
 export default async ({ app }: { app: Express }): Promise<void> => {
-  /* ---------------------- HEALTH CHECK API's ------------------------- */
+  /* ------------------ HEALTH CHECK API's ------------------------ */
   app.get('/status', (req: Request, res: Response) =>
     res.sendStatus(200).end()
   );
@@ -25,9 +25,6 @@ export default async ({ app }: { app: Express }): Promise<void> => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.use(router);
-  app.post('/test', (req: Request, res: Response) => {
-    res.status(200).json(req?.body);
-  });
   app
     .listen(config?.port, () => {
       console.log(`Server running on ${config?.port}`);
