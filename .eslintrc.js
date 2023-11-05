@@ -4,6 +4,7 @@ module.exports = {
     es2021: true
   },
   extends: ['standard-with-typescript'],
+  plugins: ['@typescript-eslint'],
   overrides: [
     {
       env: {
@@ -20,6 +21,9 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
-    '@typescript-eslint/semi': 'none'
+    '@typescript-eslint/semi': 'off',
+    '@typescript-eslint/no-floating-promises': 'off'
+    // // '@typescript-eslint/no-undef-init': 'error',
+    // '@typescript-eslint/unused-import': 'error'
   }
 };
