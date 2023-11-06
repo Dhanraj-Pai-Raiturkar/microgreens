@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 const env = dotenv.config();
 
-if (env.error) throw new Error('no .env file found');
+// if (env.error) throw new Error('no .env file found');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
