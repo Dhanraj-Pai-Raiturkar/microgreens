@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
     "@types/cors": "^2.8.15",
+    "@types/express": "^4.17.20",
     "@types/morgan": "^1.9.7",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "amazon-cognito-identity-js-typescript": "^1.22.0",
     "eslint": "^8.53.0",
     "eslint-config-standard-with-typescript": "^39.1.1",
     "eslint-plugin-import": "^2.29.0",
@@ -25,7 +28,8 @@
     "typescript-eslint": "^0.0.1-alpha.0"
   },
   "dependencies": {
-    "@types/express": "^4.17.20",
+    "amazon-cognito-identity-js": "^6.3.6",
+    "aws-sdk": "^2.1488.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
