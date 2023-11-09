@@ -72,4 +72,49 @@ export class CognitoController {
       res.status(400).json({ error });
     }
   };
+
+  forgotPassword = async (req: Request, res: Response) => {
+    try {
+      const email: string | undefined = req?.body?.email?.toString();
+      if (!email)
+        res.status(400).json({
+          status: false,
+          error: `missing required field(s): ${['email'].join(',')}`
+        });
+      else {
+        const response = await this.cognitoService.forgotPassword(email);
+        res.status(200).json(response);
+      }
+    } catch (error) {
+      console.log('CognitoController forgotPassword error', error);
+    }
+  };
+
+  confirmPassword = async (req: Request, res: Response) => {
+    try {
+      const { email, newPassword, verificationCode } = req?.body;
+      if (!email || !newPassword || !verificationCode)
+        res.status(400).json({
+          status: false,
+          error: `missing required field(s): ${[
+            'email',
+            'newPassword',
+            'verificationCode'
+          ]
+            .filter((field) => !req.body[field])
+            .join(', ')}`
+        });
+      else {
+        const response = await this.cognitoService.confirmPassword({
+          email,
+          newPassword,
+          verificationCode
+        });
+        res.status(200).json(response);
+      }
+    } catch (error) {
+      res.status(400).json(error);
+      console.log('CognitoController forgotPassword error', error);
+    }
+  };
 }

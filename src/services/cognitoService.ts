@@ -9,7 +9,8 @@ import {
   SignupRequest,
   ApiResponse,
   SigninRequest,
-  SigninResponse
+  SigninResponse,
+  ConfirmPasswordRequest
 } from './interfaces';
 import config from '../config';
 
@@ -151,6 +152,50 @@ export class CognitoService {
       } catch (error) {
         console.log('CognitoService resendConfirmationCode error', error);
         reject({ status: false, message: 'failed' });
+      }
+    });
+  };
+
+  forgotPassword = async (email: string) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.getCognitoUser(email);
+        this.cognitoUser!.forgotPassword({
+          onSuccess: (data) => {
+            resolve({
+              status: true,
+              message: `verification code sent: ${data?.CodeDeliveryDetails?.Destination}`
+            });
+          },
+          onFailure: (error) => reject({ status: false, error })
+        });
+      } catch (error) {
+        reject({ status: false, error });
+        console.log('CognitoService forgotPassword error', error);
+      }
+    });
+  };
+
+  confirmPassword = async ({
+    email,
+    newPassword,
+    verificationCode
+  }: ConfirmPasswordRequest) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.getCognitoUser(email);
+        this.cognitoUser!.confirmPassword(verificationCode, newPassword, {
+          onSuccess: (data) => {
+            resolve({
+              status: true,
+              message: data
+            });
+          },
+          onFailure: (error) => reject({ status: false, error })
+        });
+      } catch (error) {
+        reject({ status: false, error });
+        console.log('CognitoService confirmPassword error', error);
       }
     });
   };

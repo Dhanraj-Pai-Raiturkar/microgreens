@@ -21,4 +21,12 @@ authRoutes.get('/resend-confirm', async (req: Request, res: Response) => {
   await cognitoController.resendConfirmationCode(req, res);
 });
 
+authRoutes.post('/forgot-password', async (req: Request, res: Response) => {
+  await cognitoController.forgotPassword(req, res);
+});
+
+authRoutes.post('/confirm-password', async (req: Request, res: Response) => {
+  await cognitoController.confirmPassword(req, res);
+});
+
 export default authRoutes;
