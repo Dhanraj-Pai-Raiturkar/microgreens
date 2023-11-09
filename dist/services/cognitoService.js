@@ -27,7 +27,8 @@ class CognitoService {
                     resolve(this.cognitoUser.getUsername());
                 }
                 catch (error) {
-                    reject('user not found');
+                    console.log('CognitoService getCognitoUser error', error);
+                    reject({ status: false, error: 'user not found' });
                 }
             });
         });
@@ -79,9 +80,9 @@ class CognitoService {
             });
         });
         this.signIn = ({ email, password }) => __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 try {
-                    this.getCognitoUser(email);
+                    yield this.getCognitoUser(email);
                     const authenticationDetails = new amazon_cognito_identity_js_1.AuthenticationDetails({
                         Username: email,
                         Password: password
@@ -104,7 +105,7 @@ class CognitoService {
                         onFailure: (error) => {
                             reject({
                                 status: false,
-                                message: error
+                                error
                             });
                             console.log('CognitoService SignIn error', error);
                         }
@@ -112,8 +113,9 @@ class CognitoService {
                 }
                 catch (error) {
                     console.log('CognitoService SignIn error', error);
+                    reject({ status: false, error });
                 }
-            });
+            }));
         });
         this.resendConfirmationCode = (email) => __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -147,8 +149,8 @@ class CognitoService {
                     });
                 }
                 catch (error) {
-                    reject({ status: false, error });
                     console.log('CognitoService forgotPassword error', error);
+                    reject({ status: false, error });
                 }
             }));
         });
@@ -167,8 +169,8 @@ class CognitoService {
                     });
                 }
                 catch (error) {
-                    reject({ status: false, error });
                     console.log('CognitoService confirmPassword error', error);
+                    reject({ status: false, error });
                 }
             }));
         });
@@ -176,6 +178,10 @@ class CognitoService {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     yield this.getCognitoUser(email);
+                    yield this.signIn({
+                        email,
+                        password: oldPassword
+                    });
                     this.cognitoUser.changePassword(oldPassword, newPassword, (error) => {
                         if (error)
                             reject({ status: false, error: error.message });
@@ -184,6 +190,7 @@ class CognitoService {
                 }
                 catch (error) {
                     console.log('CongnitoService changePassword error', error);
+                    reject({ status: false, error });
                 }
             }));
         });
