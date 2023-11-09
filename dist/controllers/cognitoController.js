@@ -66,6 +66,74 @@ class CognitoController {
                 res.status(400).json({ error });
             }
         });
+        this.resendConfirmationCode = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
+            try {
+                const email = (_b = (_a = req === null || req === void 0 ? void 0 : req.query) === null || _a === void 0 ? void 0 : _a.email) === null || _b === void 0 ? void 0 : _b.toString();
+                if (!email)
+                    res.status(400).json({
+                        status: false,
+                        error: `missing required query param(s): ${['email'].join(',')}`
+                    });
+                else {
+                    const response = yield this.cognitoService.resendConfirmationCode(email);
+                    if (response === null || response === void 0 ? void 0 : response.status)
+                        res.status(200).json(response);
+                    else
+                        res.status(400).json(response);
+                }
+            }
+            catch (error) {
+                console.log('/resendConfirmationCode error', error);
+                res.status(400).json({ error });
+            }
+        });
+        this.forgotPassword = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _c, _d;
+            try {
+                const email = (_d = (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.email) === null || _d === void 0 ? void 0 : _d.toString();
+                if (!email)
+                    res.status(400).json({
+                        status: false,
+                        error: `missing required field(s): ${['email'].join(',')}`
+                    });
+                else {
+                    const response = yield this.cognitoService.forgotPassword(email);
+                    res.status(200).json(response);
+                }
+            }
+            catch (error) {
+                console.log('CognitoController forgotPassword error', error);
+            }
+        });
+        this.confirmPassword = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { email, newPassword, verificationCode } = req === null || req === void 0 ? void 0 : req.body;
+                if (!email || !newPassword || !verificationCode)
+                    res.status(400).json({
+                        status: false,
+                        error: `missing required field(s): ${[
+                            'email',
+                            'newPassword',
+                            'verificationCode'
+                        ]
+                            .filter((field) => !req.body[field])
+                            .join(', ')}`
+                    });
+                else {
+                    const response = yield this.cognitoService.confirmPassword({
+                        email,
+                        newPassword,
+                        verificationCode
+                    });
+                    res.status(200).json(response);
+                }
+            }
+            catch (error) {
+                res.status(400).json(error);
+                console.log('CognitoController forgotPassword error', error);
+            }
+        });
         this.cognitoService = new cognitoService_1.CognitoService();
     }
 }

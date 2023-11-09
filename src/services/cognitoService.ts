@@ -9,18 +9,35 @@ import {
   SignupRequest,
   ApiResponse,
   SigninRequest,
-  SigninResponse
+  SigninResponse,
+  ConfirmPasswordRequest
 } from './interfaces';
 import config from '../config';
 
 export class CognitoService {
   cognitoUserpool: CognitoUserPool;
+  cognitoUser?: CognitoUser;
   constructor() {
     this.cognitoUserpool = new CognitoUserPool({
       UserPoolId: config.cognitoUserpoolId!,
       ClientId: config.cognitoClientId!
     });
+    this.cognitoUser;
   }
+
+  getCognitoUser = async (email: string) => {
+    return new Promise((resolve, reject) => {
+      try {
+        this.cognitoUser = new CognitoUser({
+          Username: email,
+          Pool: this.cognitoUserpool
+        });
+        resolve(this.cognitoUser.getUsername());
+      } catch (error) {
+        reject('user not found');
+      }
+    });
+  };
 
   signUp = async ({
     email,
@@ -90,15 +107,12 @@ export class CognitoService {
   }: SigninRequest): Promise<SigninResponse> => {
     return new Promise((resolve, reject) => {
       try {
-        const cognitoUser = new CognitoUser({
-          Username: email,
-          Pool: this.cognitoUserpool
-        });
+        this.getCognitoUser(email);
         const authenticationDetails = new AuthenticationDetails({
           Username: email,
           Password: password
         });
-        cognitoUser.authenticateUser(authenticationDetails, {
+        this.cognitoUser!.authenticateUser(authenticationDetails, {
           onSuccess: (result) => {
             const idToken = result.getIdToken();
             const accessToken = result.getAccessToken();
@@ -123,6 +137,65 @@ export class CognitoService {
         });
       } catch (error) {
         console.log('CognitoService SignIn error', error);
+      }
+    });
+  };
+
+  resendConfirmationCode = async (email: string): Promise<ApiResponse> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.getCognitoUser(email);
+        this.cognitoUser!.resendConfirmationCode((error) => {
+          if (error) reject({ status: false, error });
+          resolve({ status: true, message: 'success' });
+        });
+      } catch (error) {
+        console.log('CognitoService resendConfirmationCode error', error);
+        reject({ status: false, message: 'failed' });
+      }
+    });
+  };
+
+  forgotPassword = async (email: string) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.getCognitoUser(email);
+        this.cognitoUser!.forgotPassword({
+          onSuccess: (data) => {
+            resolve({
+              status: true,
+              message: `verification code sent: ${data?.CodeDeliveryDetails?.Destination}`
+            });
+          },
+          onFailure: (error) => reject({ status: false, error })
+        });
+      } catch (error) {
+        reject({ status: false, error });
+        console.log('CognitoService forgotPassword error', error);
+      }
+    });
+  };
+
+  confirmPassword = async ({
+    email,
+    newPassword,
+    verificationCode
+  }: ConfirmPasswordRequest) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.getCognitoUser(email);
+        this.cognitoUser!.confirmPassword(verificationCode, newPassword, {
+          onSuccess: (data) => {
+            resolve({
+              status: true,
+              message: data
+            });
+          },
+          onFailure: (error) => reject({ status: false, error })
+        });
+      } catch (error) {
+        reject({ status: false, error });
+        console.log('CognitoService confirmPassword error', error);
       }
     });
   };

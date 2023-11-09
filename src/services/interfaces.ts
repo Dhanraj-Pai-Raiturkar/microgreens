@@ -26,3 +26,9 @@ export interface SigninResponse extends ApiResponse {
   name: string;
   gender: string;
 }
+
+export interface ConfirmPasswordRequest {
+  email: string;
+  verificationCode: string;
+  newPassword: string;
+}

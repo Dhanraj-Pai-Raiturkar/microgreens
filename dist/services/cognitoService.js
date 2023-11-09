@@ -17,6 +17,20 @@ const amazon_cognito_identity_js_1 = require("amazon-cognito-identity-js");
 const config_1 = __importDefault(require("../config"));
 class CognitoService {
     constructor() {
+        this.getCognitoUser = (email) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                try {
+                    this.cognitoUser = new amazon_cognito_identity_js_1.CognitoUser({
+                        Username: email,
+                        Pool: this.cognitoUserpool
+                    });
+                    resolve(this.cognitoUser.getUsername());
+                }
+                catch (error) {
+                    reject('user not found');
+                }
+            });
+        });
         this.signUp = ({ email, password, name, gender }) => __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 try {
@@ -67,15 +81,12 @@ class CognitoService {
         this.signIn = ({ email, password }) => __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 try {
-                    const cognitoUser = new amazon_cognito_identity_js_1.CognitoUser({
-                        Username: email,
-                        Pool: this.cognitoUserpool
-                    });
+                    this.getCognitoUser(email);
                     const authenticationDetails = new amazon_cognito_identity_js_1.AuthenticationDetails({
                         Username: email,
                         Password: password
                     });
-                    cognitoUser.authenticateUser(authenticationDetails, {
+                    this.cognitoUser.authenticateUser(authenticationDetails, {
                         onSuccess: (result) => {
                             const idToken = result.getIdToken();
                             const accessToken = result.getAccessToken();
@@ -104,10 +115,68 @@ class CognitoService {
                 }
             });
         });
+        this.resendConfirmationCode = (email) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    yield this.getCognitoUser(email);
+                    this.cognitoUser.resendConfirmationCode((error) => {
+                        if (error)
+                            reject({ status: false, error });
+                        resolve({ status: true, message: 'success' });
+                    });
+                }
+                catch (error) {
+                    console.log('CognitoService resendConfirmationCode error', error);
+                    reject({ status: false, message: 'failed' });
+                }
+            }));
+        });
+        this.forgotPassword = (email) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    yield this.getCognitoUser(email);
+                    this.cognitoUser.forgotPassword({
+                        onSuccess: (data) => {
+                            var _a;
+                            resolve({
+                                status: true,
+                                message: `verification code sent: ${(_a = data === null || data === void 0 ? void 0 : data.CodeDeliveryDetails) === null || _a === void 0 ? void 0 : _a.Destination}`
+                            });
+                        },
+                        onFailure: (error) => reject({ status: false, error })
+                    });
+                }
+                catch (error) {
+                    reject({ status: false, error });
+                    console.log('CognitoService forgotPassword error', error);
+                }
+            }));
+        });
+        this.confirmPassword = ({ email, newPassword, verificationCode }) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    yield this.getCognitoUser(email);
+                    this.cognitoUser.confirmPassword(verificationCode, newPassword, {
+                        onSuccess: (data) => {
+                            resolve({
+                                status: true,
+                                message: data
+                            });
+                        },
+                        onFailure: (error) => reject({ status: false, error })
+                    });
+                }
+                catch (error) {
+                    reject({ status: false, error });
+                    console.log('CognitoService confirmPassword error', error);
+                }
+            }));
+        });
         this.cognitoUserpool = new amazon_cognito_identity_js_1.CognitoUserPool({
             UserPoolId: config_1.default.cognitoUserpoolId,
             ClientId: config_1.default.cognitoClientId
         });
+        this.cognitoUser;
     }
 }
 exports.CognitoService = CognitoService;
