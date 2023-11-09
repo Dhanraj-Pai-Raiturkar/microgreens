@@ -84,7 +84,7 @@ export class CognitoController {
     try {
       const requiredFeilds = ['email'];
       const email: string = req?.body?.email?.toString();
-      if (validateRequest(req, res, 'query', requiredFeilds)) {
+      if (validateRequest(req, res, 'body', requiredFeilds)) {
         const response = await this.cognitoService.forgotPassword(email!);
         res.status(200).json(response);
       }
