@@ -52,4 +52,24 @@ export class CognitoController {
       res.status(400).json({ error });
     }
   };
+
+  resendConfirmationCode = async (req: Request, res: Response) => {
+    try {
+      const email: string | undefined = req?.query?.email?.toString();
+      if (!email)
+        res.status(400).json({
+          status: false,
+          error: `missing required query param(s): ${['email'].join(',')}`
+        });
+      else {
+        const response =
+          await this.cognitoService.resendConfirmationCode(email);
+        if (response?.status) res.status(200).json(response);
+        else res.status(400).json(response);
+      }
+    } catch (error) {
+      console.log('/resendConfirmationCode error', error);
+      res.status(400).json({ error });
+    }
+  };
 }

@@ -17,4 +17,8 @@ authRoutes.post('/sign-in', async (req: Request, res: Response) => {
   await cognitoController.signIn(req, res);
 });
 
+authRoutes.get('/resend-confirm', async (req: Request, res: Response) => {
+  await cognitoController.resendConfirmationCode(req, res);
+});
+
 export default authRoutes;
