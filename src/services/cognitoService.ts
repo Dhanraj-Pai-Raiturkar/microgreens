@@ -34,7 +34,8 @@ export class CognitoService {
         });
         resolve(this.cognitoUser.getUsername());
       } catch (error) {
-        reject('user not found');
+        console.log('CognitoService getCognitoUser error', error);
+        reject({ status: false, error: 'user not found' });
       }
     });
   };
@@ -105,9 +106,9 @@ export class CognitoService {
     email,
     password
   }: SigninRequest): Promise<SigninResponse> => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
-        this.getCognitoUser(email);
+        await this.getCognitoUser(email);
         const authenticationDetails = new AuthenticationDetails({
           Username: email,
           Password: password
@@ -130,13 +131,14 @@ export class CognitoService {
           onFailure: (error) => {
             reject({
               status: false,
-              message: error
+              error
             });
             console.log('CognitoService SignIn error', error);
           }
         });
       } catch (error) {
         console.log('CognitoService SignIn error', error);
+        reject({ status: false, error });
       }
     });
   };
@@ -170,8 +172,8 @@ export class CognitoService {
           onFailure: (error) => reject({ status: false, error })
         });
       } catch (error) {
-        reject({ status: false, error });
         console.log('CognitoService forgotPassword error', error);
+        reject({ status: false, error });
       }
     });
   };
@@ -194,8 +196,8 @@ export class CognitoService {
           onFailure: (error) => reject({ status: false, error })
         });
       } catch (error) {
-        reject({ status: false, error });
         console.log('CognitoService confirmPassword error', error);
+        reject({ status: false, error });
       }
     });
   };
@@ -212,12 +214,17 @@ export class CognitoService {
     return new Promise(async (resolve, reject) => {
       try {
         await this.getCognitoUser(email);
+        await this.signIn({
+          email,
+          password: oldPassword
+        });
         this.cognitoUser!.changePassword(oldPassword, newPassword, (error) => {
           if (error) reject({ status: false, error: error.message });
           resolve({ status: true, message: 'success' });
         });
       } catch (error) {
         console.log('CongnitoService changePassword error', error);
+        reject({ status: false, error });
       }
     });
   };
