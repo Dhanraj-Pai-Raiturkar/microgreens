@@ -172,6 +172,21 @@ class CognitoService {
                 }
             }));
         });
+        this.changePassword = ({ email, oldPassword, newPassword }) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    yield this.getCognitoUser(email);
+                    this.cognitoUser.changePassword(oldPassword, newPassword, (error) => {
+                        if (error)
+                            reject({ status: false, error: error.message });
+                        resolve({ status: true, message: 'success' });
+                    });
+                }
+                catch (error) {
+                    console.log('CongnitoService changePassword error', error);
+                }
+            }));
+        });
         this.cognitoUserpool = new amazon_cognito_identity_js_1.CognitoUserPool({
             UserPoolId: config_1.default.cognitoUserpoolId,
             ClientId: config_1.default.cognitoClientId

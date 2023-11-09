@@ -34,4 +34,7 @@ authRoutes.post('/forgot-password', (req, res) => __awaiter(void 0, void 0, void
 authRoutes.post('/confirm-password', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield cognitoController.confirmPassword(req, res);
 }));
+authRoutes.post('/change-password', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield cognitoController.changePassword(req, res);
+}));
 exports.default = authRoutes;
