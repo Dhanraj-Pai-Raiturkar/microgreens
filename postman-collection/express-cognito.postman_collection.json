@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "f4db42e1-7012-4381-9a5d-af0a4071f515",
+		"name": "express-cognito",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19941481"
+	},
+	"item": [
+		{
+			"name": "/sign-up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Dhanraj\",\n    \"gender\": \"Male\",\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"password\": \"Test@123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dev}}auth/sign-up",
+					"host": [
+						"{{dev}}auth"
+					],
+					"path": [
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/confirm-sign-up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"confirmationCode\": \"734022\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dev}}auth/confirm-sign-up",
+					"host": [
+						"{{dev}}auth"
+					],
+					"path": [
+						"confirm-sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/forgot-password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dev}}auth/forgot-password",
+					"host": [
+						"{{dev}}auth"
+					],
+					"path": [
+						"forgot-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/confirm-password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"newPassword\": \"Test@123\",\n    \"verificationCode\": \"892640\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dev}}auth/confirm-password",
+					"host": [
+						"{{dev}}auth"
+					],
+					"path": [
+						"confirm-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/change-password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"oldPassword\": \"Dhan@8897\",\n    \"newPassword\": \"Test@123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dev}}auth/change-password",
+					"host": [
+						"{{dev}}auth"
+					],
+					"path": [
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/resend-confirm",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dev}}auth/resend-confirm?email=dhanraj.raiturkar@gmail.com",
+					"host": [
+						"{{dev}}auth"
+					],
+					"path": [
+						"resend-confirm"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "dhanraj.raiturkar@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/sign-in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"password\": \"Test@123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dev}}auth/sign-in",
+					"host": [
+						"{{dev}}auth"
+					],
+					"path": [
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{dev}}status",
+					"host": [
+						"{{dev}}status"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
