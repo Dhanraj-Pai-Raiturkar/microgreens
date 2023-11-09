@@ -10,11 +10,6 @@ export interface SignupRequest {
   password: string;
 }
 
-export interface ConfirmSignupRequest {
-  email: string;
-  confirmationCode: string;
-}
-
 export interface ApiResponse {
   status: boolean;
   message: string;

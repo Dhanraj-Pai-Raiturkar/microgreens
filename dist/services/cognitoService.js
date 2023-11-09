@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CognitoService = void 0;
 const amazon_cognito_identity_js_1 = require("amazon-cognito-identity-js");
-const config_1 = __importDefault(require("../../config"));
+const config_1 = __importDefault(require("../config"));
 class CognitoService {
     constructor() {
         this.signUp = ({ email, password, name, gender }) => __awaiter(this, void 0, void 0, function* () {

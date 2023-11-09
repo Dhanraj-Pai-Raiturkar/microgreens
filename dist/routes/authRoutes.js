@@ -13,60 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const cognitoService_1 = require("../services/cognito/cognitoService");
+const cognitoController_1 = require("../controllers/cognitoController");
 const authRoutes = express_1.default.Router();
-const cognitoService = new cognitoService_1.CognitoService();
+const cognitoController = new cognitoController_1.CognitoController();
 authRoutes.post('/sign-up', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { name, email, password, gender } = req.body;
-        const response = yield cognitoService.signUp({
-            name,
-            email,
-            password,
-            gender
-        });
-        if (response.status)
-            res.status(201).json(response);
-        else
-            res.status(500).json(response);
-    }
-    catch (error) {
-        console.error('/sign-up error', error);
-        res.status(500).json({ error });
-    }
+    yield cognitoController.signUp(req, res);
 }));
-authRoutes.post('/confirm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email, confirmationCode } = req.body;
-        const response = yield cognitoService.confirmSignUp({
-            email,
-            confirmationCode
-        });
-        if (response.status)
-            res.status(200).json(response);
-        else
-            res.status(500).json(response);
-    }
-    catch (error) {
-        console.log('/confirm error', error);
-        res.status(500).json({ error });
-    }
+authRoutes.post('/confirm-sign-up', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield cognitoController.confirmSignUp(req, res);
 }));
 authRoutes.post('/sign-in', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email, password } = req.body;
-        const response = yield cognitoService.signIn({
-            email,
-            password
-        });
-        if (response.status)
-            res.status(200).json(response);
-        else
-            res.status(200).json(response);
-    }
-    catch (error) {
-        console.log('/sign-in error', error);
-        res.status(500).json({ error });
-    }
+    yield cognitoController.signIn(req, res);
 }));
 exports.default = authRoutes;
