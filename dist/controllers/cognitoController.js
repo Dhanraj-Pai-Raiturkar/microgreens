@@ -66,6 +66,28 @@ class CognitoController {
                 res.status(400).json({ error });
             }
         });
+        this.resendConfirmationCode = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
+            try {
+                const email = (_b = (_a = req === null || req === void 0 ? void 0 : req.query) === null || _a === void 0 ? void 0 : _a.email) === null || _b === void 0 ? void 0 : _b.toString();
+                if (!email)
+                    res.status(400).json({
+                        status: false,
+                        error: `missing required query param(s): ${['email'].join(',')}`
+                    });
+                else {
+                    const response = yield this.cognitoService.resendConfirmationCode(email);
+                    if (response === null || response === void 0 ? void 0 : response.status)
+                        res.status(200).json(response);
+                    else
+                        res.status(400).json(response);
+                }
+            }
+            catch (error) {
+                console.log('/resendConfirmationCode error', error);
+                res.status(400).json({ error });
+            }
+        });
         this.cognitoService = new cognitoService_1.CognitoService();
     }
 }

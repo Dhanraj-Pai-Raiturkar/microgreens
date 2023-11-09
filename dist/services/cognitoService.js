@@ -17,6 +17,20 @@ const amazon_cognito_identity_js_1 = require("amazon-cognito-identity-js");
 const config_1 = __importDefault(require("../config"));
 class CognitoService {
     constructor() {
+        this.getCognitoUser = (email) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                try {
+                    this.cognitoUser = new amazon_cognito_identity_js_1.CognitoUser({
+                        Username: email,
+                        Pool: this.cognitoUserpool
+                    });
+                    resolve(this.cognitoUser.getUsername());
+                }
+                catch (error) {
+                    reject('user not found');
+                }
+            });
+        });
         this.signUp = ({ email, password, name, gender }) => __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 try {
@@ -67,15 +81,12 @@ class CognitoService {
         this.signIn = ({ email, password }) => __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 try {
-                    const cognitoUser = new amazon_cognito_identity_js_1.CognitoUser({
-                        Username: email,
-                        Pool: this.cognitoUserpool
-                    });
+                    this.getCognitoUser(email);
                     const authenticationDetails = new amazon_cognito_identity_js_1.AuthenticationDetails({
                         Username: email,
                         Password: password
                     });
-                    cognitoUser.authenticateUser(authenticationDetails, {
+                    this.cognitoUser.authenticateUser(authenticationDetails, {
                         onSuccess: (result) => {
                             const idToken = result.getIdToken();
                             const accessToken = result.getAccessToken();
@@ -104,10 +115,27 @@ class CognitoService {
                 }
             });
         });
+        this.resendConfirmationCode = (email) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    yield this.getCognitoUser(email);
+                    this.cognitoUser.resendConfirmationCode((error) => {
+                        if (error)
+                            reject({ status: false, error });
+                        resolve({ status: true, message: 'success' });
+                    });
+                }
+                catch (error) {
+                    console.log('CognitoService resendConfirmationCode error', error);
+                    reject({ status: false, message: 'failed' });
+                }
+            }));
+        });
         this.cognitoUserpool = new amazon_cognito_identity_js_1.CognitoUserPool({
             UserPoolId: config_1.default.cognitoUserpoolId,
             ClientId: config_1.default.cognitoClientId
         });
+        this.cognitoUser;
     }
 }
 exports.CognitoService = CognitoService;

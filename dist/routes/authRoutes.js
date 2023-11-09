@@ -25,4 +25,7 @@ authRoutes.post('/confirm-sign-up', (req, res) => __awaiter(void 0, void 0, void
 authRoutes.post('/sign-in', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield cognitoController.signIn(req, res);
 }));
+authRoutes.get('/resend-confirm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield cognitoController.resendConfirmationCode(req, res);
+}));
 exports.default = authRoutes;
