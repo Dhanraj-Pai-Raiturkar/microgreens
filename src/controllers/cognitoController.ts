@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { CognitoService } from '../services/cognitoService';
+import validateRequest from '../lib/validateRequest';
 
 export class CognitoController {
   cognitoService: CognitoService;
@@ -8,15 +9,18 @@ export class CognitoController {
   }
   signUp = async (req: Request, res: Response) => {
     try {
+      const requiredFields = ['name', 'email', 'password', 'gender'];
       const { name, email, password, gender } = req.body;
-      const response = await this.cognitoService.signUp({
-        name,
-        email,
-        password,
-        gender
-      });
-      if (response?.status) res.status(201).json(response);
-      else res.status(400).json(response);
+      if (validateRequest(req, res, 'body', requiredFields)) {
+        const response = await this.cognitoService.signUp({
+          name,
+          email,
+          password,
+          gender
+        });
+        if (response?.status) res.status(201).json(response);
+        else res.status(400).json(response);
+      }
     } catch (error) {
       console.error('/sign-up error', error);
       res.status(400).json({ error });
@@ -25,13 +29,16 @@ export class CognitoController {
 
   confirmSignUp = async (req: Request, res: Response) => {
     try {
+      const requiredFields = ['email', 'confirmationCode'];
       const { email, confirmationCode } = req.body;
-      const response = await this.cognitoService.confirmSignUp({
-        email,
-        confirmationCode
-      });
-      if (response?.status) res.status(200).json(response);
-      else res.status(400).json(response);
+      if (validateRequest(req, res, 'body', requiredFields)) {
+        const response = await this.cognitoService.confirmSignUp({
+          email,
+          confirmationCode
+        });
+        if (response?.status) res.status(200).json(response);
+        else res.status(400).json(response);
+      }
     } catch (error) {
       console.log('/confirm error', error);
       res.status(400).json({ error });
@@ -40,13 +47,16 @@ export class CognitoController {
 
   signIn = async (req: Request, res: Response) => {
     try {
+      const requiredFeilds = ['email', 'password'];
       const { email, password } = req.body;
-      const response = await this.cognitoService.signIn({
-        email,
-        password
-      });
-      if (response?.status) res.status(200).json(response);
-      else res.status(400).json(response);
+      if (validateRequest(req, res, 'body', requiredFeilds)) {
+        const response = await this.cognitoService.signIn({
+          email,
+          password
+        });
+        if (response?.status) res.status(200).json(response);
+        else res.status(400).json(response);
+      }
     } catch (error) {
       console.log('/sign-in error', error);
       res.status(400).json({ error });
@@ -55,15 +65,12 @@ export class CognitoController {
 
   resendConfirmationCode = async (req: Request, res: Response) => {
     try {
-      const email: string | undefined = req?.query?.email?.toString();
-      if (!email)
-        res.status(400).json({
-          status: false,
-          error: `missing required query param(s): ${['email'].join(',')}`
-        });
-      else {
-        const response =
-          await this.cognitoService.resendConfirmationCode(email);
+      const requiredFeilds = ['email'];
+      const email = req?.query?.email?.toString();
+      if (validateRequest(req, res, 'query', requiredFeilds)) {
+        const response = await this.cognitoService.resendConfirmationCode(
+          email!
+        );
         if (response?.status) res.status(200).json(response);
         else res.status(400).json(response);
       }
@@ -75,14 +82,10 @@ export class CognitoController {
 
   forgotPassword = async (req: Request, res: Response) => {
     try {
-      const email: string | undefined = req?.body?.email?.toString();
-      if (!email)
-        res.status(400).json({
-          status: false,
-          error: `missing required field(s): ${['email'].join(',')}`
-        });
-      else {
-        const response = await this.cognitoService.forgotPassword(email);
+      const requiredFeilds = ['email'];
+      const email: string = req?.body?.email?.toString();
+      if (validateRequest(req, res, 'query', requiredFeilds)) {
+        const response = await this.cognitoService.forgotPassword(email!);
         res.status(200).json(response);
       }
     } catch (error) {
@@ -92,19 +95,9 @@ export class CognitoController {
 
   confirmPassword = async (req: Request, res: Response) => {
     try {
+      const requiredFields = ['email', 'newPassword', 'verificationCode'];
       const { email, newPassword, verificationCode } = req?.body;
-      if (!email || !newPassword || !verificationCode)
-        res.status(400).json({
-          status: false,
-          error: `missing required field(s): ${[
-            'email',
-            'newPassword',
-            'verificationCode'
-          ]
-            .filter((field) => !req.body[field])
-            .join(', ')}`
-        });
-      else {
+      if (validateRequest(req, res, 'body', requiredFields)) {
         const response = await this.cognitoService.confirmPassword({
           email,
           newPassword,
@@ -114,7 +107,25 @@ export class CognitoController {
       }
     } catch (error) {
       res.status(400).json(error);
-      console.log('CognitoController forgotPassword error', error);
+      console.log('CognitoController changePassword error', error);
+    }
+  };
+
+  changePassword = async (req: Request, res: Response) => {
+    try {
+      const requiredFields = ['email', 'oldPassword', 'newPassword'];
+      const { email, oldPassword, newPassword } = req?.body;
+      if (validateRequest(req, res, 'body', requiredFields)) {
+        const response = await this.cognitoService.changePassword({
+          email,
+          oldPassword,
+          newPassword
+        });
+        res.status(200).json(response);
+      }
+    } catch (error) {
+      res.status(400).json(error);
+      console.log('CognitoController changePassword error', error);
     }
   };
 }

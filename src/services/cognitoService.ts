@@ -199,4 +199,26 @@ export class CognitoService {
       }
     });
   };
+
+  changePassword = async ({
+    email,
+    oldPassword,
+    newPassword
+  }: {
+    email: string;
+    oldPassword: string;
+    newPassword: string;
+  }) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.getCognitoUser(email);
+        this.cognitoUser!.changePassword(oldPassword, newPassword, (error) => {
+          if (error) reject({ status: false, error: error.message });
+          resolve({ status: true, message: 'success' });
+        });
+      } catch (error) {
+        console.log('CongnitoService changePassword error', error);
+      }
+    });
+  };
 }
