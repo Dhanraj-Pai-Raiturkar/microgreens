@@ -29,4 +29,8 @@ authRoutes.post('/confirm-password', async (req: Request, res: Response) => {
   await cognitoController.confirmPassword(req, res);
 });
 
+authRoutes.post('/change-password', async (req: Request, res: Response) => {
+  await cognitoController.changePassword(req, res);
+});
+
 export default authRoutes;
