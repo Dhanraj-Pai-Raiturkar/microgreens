@@ -102,7 +102,7 @@ class CognitoController {
             try {
                 const requiredFeilds = ['email'];
                 const email = (_d = (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.email) === null || _d === void 0 ? void 0 : _d.toString();
-                if ((0, validateRequest_1.default)(req, res, 'query', requiredFeilds)) {
+                if ((0, validateRequest_1.default)(req, res, 'body', requiredFeilds)) {
                     const response = yield this.cognitoService.forgotPassword(email);
                     res.status(200).json(response);
                 }
