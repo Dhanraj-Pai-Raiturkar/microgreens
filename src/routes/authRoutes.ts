@@ -1,6 +1,8 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { CognitoController } from '../controllers/cognitoController';
+import { authenticateJwt } from '../middlewares/authenticateMiddleware';
+import { authorizeJwt } from '../middlewares/authorizeMiddleware';
 
 const authRoutes = express.Router();
 const cognitoController = new CognitoController();
@@ -29,7 +31,16 @@ authRoutes.post('/confirm-password', async (req: Request, res: Response) => {
   await cognitoController.confirmPassword(req, res);
 });
 
-authRoutes.post('/change-password', async (req: Request, res: Response) => {
+authRoutes.post(
+  '/change-password',
+  authenticateJwt,
+  authorizeJwt,
+  async (req: Request, res: Response) => {
+    await cognitoController.changePassword(req, res);
+  }
+);
+
+authRoutes.post('/validate-jwt', async (req: Request, res: Response) => {
   await cognitoController.changePassword(req, res);
 });
 
