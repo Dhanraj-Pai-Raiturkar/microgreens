@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cognitoController_1 = require("../controllers/cognitoController");
+const authenticateMiddleware_1 = require("../middlewares/authenticateMiddleware");
+const authorizeMiddleware_1 = require("../middlewares/authorizeMiddleware");
 const authRoutes = express_1.default.Router();
 const cognitoController = new cognitoController_1.CognitoController();
 authRoutes.post('/sign-up', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -34,7 +36,10 @@ authRoutes.post('/forgot-password', (req, res) => __awaiter(void 0, void 0, void
 authRoutes.post('/confirm-password', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield cognitoController.confirmPassword(req, res);
 }));
-authRoutes.post('/change-password', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+authRoutes.post('/change-password', authenticateMiddleware_1.authenticateJwt, authorizeMiddleware_1.authorizeJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield cognitoController.changePassword(req, res);
+}));
+authRoutes.post('/validate-jwt', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield cognitoController.changePassword(req, res);
 }));
 exports.default = authRoutes;
