@@ -13,9 +13,15 @@ import {
   ConfirmPasswordRequest
 } from './interfaces';
 import config from '../config';
+import { CognitoJwtVerifier } from 'aws-jwt-verify';
+import {
+  CognitoJwtVerifierProperties,
+  CognitoJwtVerifierSingleUserPool
+} from 'aws-jwt-verify/cognito-verifier';
 
 export class CognitoService {
   cognitoUserpool: CognitoUserPool;
+  cognitoJwtVerifier: CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>;
   cognitoUser?: CognitoUser;
   constructor() {
     this.cognitoUserpool = new CognitoUserPool({
@@ -23,6 +29,11 @@ export class CognitoService {
       ClientId: config.cognitoClientId!
     });
     this.cognitoUser;
+    this.cognitoJwtVerifier = CognitoJwtVerifier.create({
+      userPoolId: config.cognitoUserpoolId!
+      // clientId: config.cognitoClientId,
+      // tokenUse: 'access'
+    });
   }
 
   getCognitoUser = async (email: string) => {
@@ -116,7 +127,8 @@ export class CognitoService {
         this.cognitoUser!.authenticateUser(authenticationDetails, {
           onSuccess: (result) => {
             const idToken = result.getIdToken();
-            const accessToken = result.getAccessToken();
+            // const accessToken = result.getAccessToken();
+            const accessToken = result.getIdToken();
             console.log(accessToken.payload.sub);
             const response: SigninResponse = {
               status: true,
@@ -124,7 +136,7 @@ export class CognitoService {
               sub: idToken.payload.sub,
               name: idToken.payload.name,
               gender: idToken.payload.gender,
-              accessToken: accessToken.getJwtToken()
+              idToken: accessToken.getJwtToken()
             };
             resolve(response);
           },

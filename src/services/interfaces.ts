@@ -21,7 +21,7 @@ export interface SigninRequest {
 }
 
 export interface SigninResponse extends ApiResponse {
-  accessToken: string;
+  idToken: string;
   sub: string;
   name: string;
   gender: string;

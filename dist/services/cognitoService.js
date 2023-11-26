@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CognitoService = void 0;
 const amazon_cognito_identity_js_1 = require("amazon-cognito-identity-js");
 const config_1 = __importDefault(require("../config"));
+const aws_jwt_verify_1 = require("aws-jwt-verify");
 class CognitoService {
     constructor() {
         this.getCognitoUser = (email) => __awaiter(this, void 0, void 0, function* () {
@@ -90,7 +91,8 @@ class CognitoService {
                     this.cognitoUser.authenticateUser(authenticationDetails, {
                         onSuccess: (result) => {
                             const idToken = result.getIdToken();
-                            const accessToken = result.getAccessToken();
+                            // const accessToken = result.getAccessToken();
+                            const accessToken = result.getIdToken();
                             console.log(accessToken.payload.sub);
                             const response = {
                                 status: true,
@@ -98,7 +100,7 @@ class CognitoService {
                                 sub: idToken.payload.sub,
                                 name: idToken.payload.name,
                                 gender: idToken.payload.gender,
-                                accessToken: accessToken.getJwtToken()
+                                idToken: accessToken.getJwtToken()
                             };
                             resolve(response);
                         },
@@ -199,6 +201,11 @@ class CognitoService {
             ClientId: config_1.default.cognitoClientId
         });
         this.cognitoUser;
+        this.cognitoJwtVerifier = aws_jwt_verify_1.CognitoJwtVerifier.create({
+            userPoolId: config_1.default.cognitoUserpoolId
+            // clientId: config.cognitoClientId,
+            // tokenUse: 'access'
+        });
     }
 }
 exports.CognitoService = CognitoService;
