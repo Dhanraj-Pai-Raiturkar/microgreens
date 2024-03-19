@@ -25,6 +25,7 @@ export interface SigninResponse extends ApiResponse {
   sub: string;
   name: string;
   gender: string;
+  accessToken?: String
 }
 
 export interface ConfirmPasswordRequest {
