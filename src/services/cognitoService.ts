@@ -30,7 +30,7 @@ export class CognitoService {
     });
     this.cognitoUser;
     this.cognitoJwtVerifier = CognitoJwtVerifier.create({
-      userPoolId: config.cognitoUserpoolId!,
+      userPoolId: config.cognitoUserpoolId!
       // clientId: config.cognitoClientId,
       // tokenUse: 'access'
     });
@@ -127,7 +127,7 @@ export class CognitoService {
         this.cognitoUser!.authenticateUser(authenticationDetails, {
           onSuccess: (result) => {
             const idToken = result.getIdToken();
-            console.log("idToken", idToken)
+            console.log('idToken', idToken);
             const token = result.getAccessToken();
             const accessToken = result.getIdToken();
             console.log(accessToken.payload.sub);
@@ -138,7 +138,8 @@ export class CognitoService {
               name: idToken.payload.name,
               gender: idToken.payload.gender,
               idToken: accessToken.getJwtToken(),
-              accessToken: token.getJwtToken()
+              accessToken: token.getJwtToken(),
+              refreshToken: ''
             };
             resolve(response);
           },

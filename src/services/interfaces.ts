@@ -22,10 +22,17 @@ export interface SigninRequest {
 
 export interface SigninResponse extends ApiResponse {
   idToken: string;
+  sub?: string;
+  name?: string;
+  gender?: string;
+  accessToken: String;
+  refreshToken: String;
+}
+
+export interface CognitoUserResponse {
   sub: string;
   name: string;
   gender: string;
-  accessToken?: String
 }
 
 export interface ConfirmPasswordRequest {
