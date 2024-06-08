@@ -6,11 +6,25 @@ const env = dotenv.config();
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
+const getConnectionString = () => {
+  try {
+    const password = encodeURIComponent(process.env.MONGODB_PASSWORD ?? '');
+    const connectionSrtring = process.env.MONGODB_CONNECTION_STRING?.split('@');
+    return `${
+      connectionSrtring?.[0] + password + '@' + connectionSrtring?.[1]
+    }`;
+  } catch (error) {
+    console.error('config getConnectionString error', error);
+    throw error;
+  }
+};
+
 export default {
   port: process.env.PORT,
   logs: {
     morgan: process.env.MORGAN
   },
   cognitoUserpoolId: process.env.COGNITO_USERPOOL_ID,
-  cognitoClientId: process.env.COGNITO_CLIENT_ID
+  cognitoClientId: process.env.COGNITO_CLIENT_ID,
+  mongoDbConnectionString: getConnectionString()
 };
