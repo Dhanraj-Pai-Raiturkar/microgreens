@@ -19,18 +19,18 @@ jobs:
           password: ${{secrets.DOCKERHUB_PASSWORD}}
     
       - name: Configure Environment Variables
-         uses: danielr1996/envsubst-action@1.0.0
-         env:
-            COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
-            COGNITO_USERPOOL_ID: ${{ secrets.COGNITO_USERPOOL_ID }}
-            MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
-            MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-            MORGAN: ${{ secrets.MORGAN }}
-            NODE_ENV: ${{ secrets.APP_ENV }}
-            PORT: ${{ secrets.APP_ENV }}
-         with:
-            input: .env.ci
-            output: .env
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          COGNITO_USERPOOL_ID: ${{ secrets.COGNITO_USERPOOL_ID }}
+          MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
+          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+          MORGAN: ${{ secrets.MORGAN }}
+          NODE_ENV: ${{ secrets.APP_ENV }}
+          PORT: ${{ secrets.APP_ENV }}
+        with:
+          input: .env.ci
+          output: .env
             
       - name: Verify .env file
         run: cat .env
