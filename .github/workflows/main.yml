@@ -17,8 +17,8 @@ jobs:
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_PASSWORD}}
-      
-      - name: "Replace env variables (dev)"
+    
+      - name: Configure Environment Variables
          uses: danielr1996/envsubst-action@1.0.0
          env:
             COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
