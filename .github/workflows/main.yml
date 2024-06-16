@@ -30,6 +30,9 @@ jobs:
           echo PORT=${{ secrets.PORT }} >> .env
           cat .env
 
+      - name: Copy .env to app directory
+        run: mv .env /usr/src/app/.env
+
       - name: Verify .env file
         run: cat .env
 
