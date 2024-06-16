@@ -20,14 +20,13 @@ jobs:
       
       - name: Create .env file
         run: |
-          cat <<EOF > .env
-          echo COGNITO_CLIENT_ID=${{ secrets.COGNITO_CLIENT_ID }} >> .env
-          echo COGNITO_USERPOOL_ID=${{ secrets.COGNITO_USERPOOL_ID }} >> .env
-          echo MONGODB_CONNECTION_STRING=${{ secrets.MONGODB_CONNECTION_STRING }} >> .env
-          echo MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }} >> .env
-          echo MORGAN=${{ secrets.MORGAN }} >> .env
-          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
-          echo PORT=${{ secrets.PORT }} >> .env
+          printf "COGNITO_CLIENT_ID=%s\n" "${{ secrets.COGNITO_CLIENT_ID }}" >> .env
+          printf "COGNITO_USERPOOL_ID=%s\n" "${{ secrets.COGNITO_USERPOOL_ID }}" >> .env
+          printf "MONGODB_CONNECTION_STRING=%s\n" "${{ secrets.MONGODB_CONNECTION_STRING }}" >> .env
+          printf "MONGODB_PASSWORD=%s\n" "${{ secrets.MONGODB_PASSWORD }}" >> .env
+          printf "MORGAN=%s\n" "${{ secrets.MORGAN }}" >> .env
+          printf "NODE_ENV=%s\n" "${{ secrets.NODE_ENV }}" >> .env
+          printf "PORT=%s\n" "${{ secrets.PORT }}" >> .env
 
       - name: Verify .env file
         run: cat .env
