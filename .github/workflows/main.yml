@@ -18,16 +18,20 @@ jobs:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_PASSWORD}}
       
-      - name: Create .env file
-        run: |
-          printf "COGNITO_CLIENT_ID=%s\n" "${{ secrets.COGNITO_CLIENT_ID }}" >> .env
-          printf "COGNITO_USERPOOL_ID=%s\n" "${{ secrets.COGNITO_USERPOOL_ID }}" >> .env
-          printf "MONGODB_CONNECTION_STRING=%s\n" "${{ secrets.MONGODB_CONNECTION_STRING }}" >> .env
-          printf "MONGODB_PASSWORD=%s\n" "${{ secrets.MONGODB_PASSWORD }}" >> .env
-          printf "MORGAN=%s\n" "${{ secrets.MORGAN }}" >> .env
-          printf "NODE_ENV=%s\n" "${{ secrets.NODE_ENV }}" >> .env
-          printf "PORT=%s\n" "${{ secrets.PORT }}" >> .env
-
+      - name: "Replace env variables (dev)"
+         uses: danielr1996/envsubst-action@1.0.0
+         env:
+            COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+            COGNITO_USERPOOL_ID: ${{ secrets.COGNITO_USERPOOL_ID }}
+            MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
+            MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+            MORGAN: ${{ secrets.MORGAN }}
+            NODE_ENV: ${{ secrets.APP_ENV }}
+            PORT: ${{ secrets.APP_ENV }}
+         with:
+            input: .env.ci
+            output: .env
+            
       - name: Verify .env file
         run: cat .env
 
