@@ -17,6 +17,16 @@ jobs:
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_PASSWORD}}
+      
+      - name: Create .env file
+        run: |
+          echo COGNITO_CLIENT_ID=${{ secrets.COGNITO_CLIENT_ID }} >> .env
+          echo COGNITO_USERPOOL_ID=${{ secrets.COGNITO_USERPOOL_ID }} >> .env
+          echo MONGODB_CONNECTION_STRING=${{ secrets.MONGODB_CONNECTION_STRING }} >> .env
+          echo MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }} >> .env
+          echo MORGAN=${{ secrets.MORGAN }} >> .env
+          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+          echo PORT=${{ secrets.PORT }} >> .env
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
