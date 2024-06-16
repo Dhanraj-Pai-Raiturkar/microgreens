@@ -1,16 +1,27 @@
 import { Request, Response } from 'express';
 import { CognitoService } from '../services/cognitoService';
 import validateRequest from '../lib/validateRequest';
+import UserRepository from '../repository/UserRepository';
 
 export class CognitoController {
   cognitoService: CognitoService;
+  userRepository: UserRepository;
   constructor() {
     this.cognitoService = new CognitoService();
+    this.userRepository = new UserRepository();
   }
   signUp = async (req: Request, res: Response) => {
     try {
-      const requiredFields = ['name', 'email', 'password', 'gender'];
-      const { name, email, password, gender } = req.body;
+      const requiredFields = [
+        'firstName',
+        'lastName',
+        'email',
+        'password',
+        'gender'
+      ];
+      const data = req.body;
+      const { firstName, lastName, gender, email, password } = data;
+      const name = firstName + lastName;
       if (validateRequest(req, res, 'body', requiredFields)) {
         const response = await this.cognitoService.signUp({
           name,
@@ -18,6 +29,10 @@ export class CognitoController {
           password,
           gender
         });
+        data.sub = response?.userSub;
+        data.verified = false;
+        data.role = 'shopper';
+        await this.userRepository.createUser(data);
         if (response?.status) res.status(201).json(response);
         else res.status(400).json(response);
       }
@@ -32,12 +47,15 @@ export class CognitoController {
       const requiredFields = ['email', 'confirmationCode'];
       const { email, confirmationCode } = req.body;
       if (validateRequest(req, res, 'body', requiredFields)) {
-        const response = await this.cognitoService.confirmSignUp({
-          email,
-          confirmationCode
-        });
-        if (response?.status) res.status(200).json(response);
-        else res.status(400).json(response);
+        const [cognitoResponse, mongoResponse] = await Promise.all([
+          await this.cognitoService.confirmSignUp({
+            email,
+            confirmationCode
+          }),
+          this.userRepository.updateUser(email, { verified: true })
+        ]);
+        if (cognitoResponse?.status) res.status(200).json(cognitoResponse);
+        else res.status(400).json(cognitoResponse);
       }
     } catch (error) {
       console.log('/confirm error', error);
@@ -50,11 +68,20 @@ export class CognitoController {
       const requiredFeilds = ['email', 'password'];
       const { email, password } = req.body;
       if (validateRequest(req, res, 'body', requiredFeilds)) {
-        const response = await this.cognitoService.signIn({
-          email,
-          password
-        });
-        if (response?.status) res.status(200).json(response);
+        const [cognitoResponse, userResponse] = await Promise.all([
+          this.cognitoService.signIn({
+            email,
+            password
+          }),
+          this.userRepository.findUser(email)
+        ]);
+        const response = {
+          status: cognitoResponse?.status,
+          message: cognitoResponse?.message,
+          idToken: cognitoResponse?.idToken,
+          profile: userResponse
+        };
+        if (cognitoResponse?.status) res.status(200).json(response);
         else res.status(400).json(response);
       }
     } catch (error) {
