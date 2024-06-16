@@ -26,8 +26,8 @@ jobs:
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
           MORGAN: ${{ secrets.MORGAN }}
-          NODE_ENV: ${{ secrets.APP_ENV }}
-          PORT: ${{ secrets.APP_ENV }}
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          PORT: ${{ secrets.PORT }}
         with:
           input: .env.ci
           output: .env
