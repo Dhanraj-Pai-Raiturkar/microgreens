@@ -22,32 +22,14 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Login to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@v2
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_PASSWORD}}
 
-      - name: Read Env
-        run: echo "$COGNITO_CLIENT_ID $COGNITO_USERPOOL_ID $MONGODB_CONNECTION_STRING $MONGODB_PASSWORD $MORGAN $NODE_ENV $PORT"
-      
-      - name: Create .env file
-        run: |
-          touch .env
-          echo COGNITO_CLIENT_ID="$COGNITO_CLIENT_ID" >> .env
-          echo COGNITO_USERPOOL_ID="$COGNITO_USERPOOL_ID" >> .env
-          echo MONGODB_CONNECTION_STRING=$"$MONGODB_CONNECTION_STRING" >> .env
-          echo MONGODB_PASSWORD="$MONGODB_PASSWORD" >> .env
-          echo MORGAN="$MORGAN" >> .env
-          echo NODE_ENV="$NODE_ENV" >> .env
-          echo PORT="$PORT" >> .env
-          cat .env
-
-      - name: Verify .env file
-        run: cat .env
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        uses: docker/build-push-action@v4
         with:
           images: dhanraj8897/node-microgreens
 
@@ -60,3 +42,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            COGNITO_CLIENT_ID=${{ secrets.COGNITO_CLIENT_ID }}
+            COGNITO_USERPOOL_ID=${{ secrets.COGNITO_USERPOOL_ID }}
+            MONGODB_CONNECTION_STRING=${{ secrets.MONGODB_CONNECTION_STRING }}
+            MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}
+            MORGAN=${{ secrets.MORGAN }}
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            PORT=${{ secrets.PORT }}
