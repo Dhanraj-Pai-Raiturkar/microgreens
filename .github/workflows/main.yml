@@ -17,6 +17,9 @@ jobs:
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_PASSWORD}}
+
+      - name: Read Env
+        run: cat .env
       
       - name: Create .env file
         run: |
@@ -29,9 +32,6 @@ jobs:
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
           echo PORT=${{ secrets.PORT }} >> .env
           cat .env
-
-      - name: Copy .env to app directory
-        run: mv .env /usr/src/app/.env
 
       - name: Verify .env file
         run: cat .env
