@@ -4,6 +4,15 @@ on:
   push:
     branches: ['dev']
 
+env:
+  COGNITO_CLIENT_ID: ${{secrets.COGNITO_CLIENT_ID}}
+  COGNITO_USERPOOL_ID: ${{secrets.COGNITO_USERPOOL_ID}}
+  MONGODB_CONNECTION_STRING: ${{secrets.MONGODB_CONNECTION_STRING}}
+  MONGODB_PASSWORD: ${{secrets.MONGODB_PASSWORD}}
+  MORGAN: ${{secrets.MORGAN}}
+  NODE_ENV: ${{secrets.NODE_ENV}}
+  PORT: ${{secrets.PORT}}
+
 jobs:
   push_to_registry:
     name: Push Docker Image to Docker Hub
@@ -19,18 +28,18 @@ jobs:
           password: ${{secrets.DOCKERHUB_PASSWORD}}
 
       - name: Read Env
-        run: cat .env
+        run: echo "$COGNITO_CLIENT_ID $COGNITO_USERPOOL_ID $MONGODB_CONNECTION_STRING $MONGODB_PASSWORD $MORGAN $NODE_ENV $PORT"
       
       - name: Create .env file
         run: |
           touch .env
-          echo COGNITO_CLIENT_ID=${{ secrets.COGNITO_CLIENT_ID }} >> .env
-          echo COGNITO_USERPOOL_ID=${{ secrets.COGNITO_USERPOOL_ID }} >> .env
-          echo MONGODB_CONNECTION_STRING=${{ secrets.MONGODB_CONNECTION_STRING }} >> .env
-          echo MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }} >> .env
-          echo MORGAN=${{ secrets.MORGAN }} >> .env
-          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
-          echo PORT=${{ secrets.PORT }} >> .env
+          echo COGNITO_CLIENT_ID="$COGNITO_CLIENT_ID" >> .env
+          echo COGNITO_USERPOOL_ID="$COGNITO_USERPOOL_ID" >> .env
+          echo MONGODB_CONNECTION_STRING=$"$MONGODB_CONNECTION_STRING" >> .env
+          echo MONGODB_PASSWORD="$MONGODB_PASSWORD" >> .env
+          echo MORGAN="$MORGAN" >> .env
+          echo NODE_ENV="$NODE_ENV" >> .env
+          echo PORT="$PORT" >> .env
           cat .env
 
       - name: Verify .env file
