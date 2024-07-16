@@ -47,13 +47,16 @@ export class CognitoController {
       const requiredFields = ['email', 'confirmationCode'];
       const { email, confirmationCode } = req.body;
       if (validateRequest(req, res, 'body', requiredFields)) {
-        const [cognitoResponse, mongoResponse] = await Promise.all([
+        const [cognitoResponse, mongoResponse]: [any, any] = await Promise.all([
           await this.cognitoService.confirmSignUp({
             email,
             confirmationCode
           }),
           this.userRepository.updateUser(email, { verified: true })
         ]);
+        console.log('mongoResponse', mongoResponse);
+        const cognitoSub = mongoResponse.sub;
+        await this.cognitoService.assignGroup(cognitoSub);
         if (cognitoResponse?.status) res.status(200).json(cognitoResponse);
         else res.status(400).json(cognitoResponse);
       }
@@ -75,9 +78,11 @@ export class CognitoController {
           }),
           this.userRepository.findUser(email)
         ]);
+        console.log('cognitoResponse', cognitoResponse);
         const response = {
           status: cognitoResponse?.status,
           message: cognitoResponse?.message,
+          groups: cognitoResponse?.groups,
           idToken: cognitoResponse?.idToken,
           profile: userResponse
         };

@@ -1,9 +1,9 @@
-import UserModel, { UserModelSchema } from '../models/UserModel';
+import UserModel, { UserModelType } from '../models/UserModel';
 
 class UserRepository {
   constructor() {}
 
-  async createUser(user: typeof UserModelSchema) {
+  async createUser(user: UserModelType) {
     try {
       const response = new UserModel(user);
       const data = await response.save();
@@ -28,7 +28,7 @@ class UserRepository {
 
   async updateUser(email: string, data: any) {
     try {
-      const response = await UserModel.updateOne({ email }, data);
+      const response = await UserModel.findOneAndUpdate({ email }, data);
       console.log('UserRepository::updateUser update response', response);
       return response;
     } catch (error) {

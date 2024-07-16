@@ -26,5 +26,8 @@ export default {
   },
   cognitoUserpoolId: process.env.COGNITO_USERPOOL_ID,
   cognitoClientId: process.env.COGNITO_CLIENT_ID,
-  mongoDbConnectionString: getConnectionString()
+  cognitoRegion: process.env.COGNITO_REGION,
+  mongoDbConnectionString: getConnectionString(),
+  customerGroup: 'customer',
+  adminGroup: 'admin'
 };
