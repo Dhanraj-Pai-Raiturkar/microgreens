@@ -1,10 +1,13 @@
-import ProductModel, { ProductModelSchema } from '../models/ProductModel';
+import { constructQuery } from '../lib/repositoryLib';
+import ProductModel, { ProductModelType } from '../models/ProductModel';
+import { v4 as uuid } from 'uuid';
 
 class ProductRepository {
   constructor() {}
 
-  async create(data: typeof ProductModelSchema) {
+  async create(data: ProductModelType) {
     try {
+      data.id = uuid();
       const product = new ProductModel(data);
       const response = await product.save();
       console.log('ProductRepository create response', response);
@@ -15,11 +18,9 @@ class ProductRepository {
     }
   }
 
-  async read(id: string | undefined) {
+  async read(query: any) {
     try {
-      let filter = id ? { id } : {};
-      console.log('ProductRepository read filter', filter);
-      const response = await ProductModel.find(filter);
+      const response = await ProductModel.find(query);
       console.log('ProductRepository read response size', response?.length);
       return response;
     } catch (error) {
@@ -28,7 +29,7 @@ class ProductRepository {
     }
   }
 
-  async update(id: string, data: typeof ProductModelSchema) {
+  async update(id: string, data: ProductModelType) {
     try {
       const response = await ProductModel.findOneAndUpdate({ id }, data);
       console.log('ProductRepository update response', response);

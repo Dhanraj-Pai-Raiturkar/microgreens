@@ -18,11 +18,14 @@ import {
   CognitoJwtVerifierProperties,
   CognitoJwtVerifierSingleUserPool
 } from 'aws-jwt-verify/cognito-verifier';
+import AWS, { CognitoIdentityServiceProvider } from 'aws-sdk';
+import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
 
 export class CognitoService {
   cognitoUserpool: CognitoUserPool;
   cognitoJwtVerifier: CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>;
   cognitoUser?: CognitoUser;
+  cognitoClient: CognitoIdentityServiceProvider;
   constructor() {
     this.cognitoUserpool = new CognitoUserPool({
       UserPoolId: config.cognitoUserpoolId!,
@@ -33,6 +36,9 @@ export class CognitoService {
       userPoolId: config.cognitoUserpoolId!
       // clientId: config.cognitoClientId,
       // tokenUse: 'access'
+    });
+    this.cognitoClient = new CognitoIdentityServiceProvider({
+      region: config.cognitoRegion
     });
   }
 
@@ -126,17 +132,19 @@ export class CognitoService {
         });
         this.cognitoUser!.authenticateUser(authenticationDetails, {
           onSuccess: (result) => {
-            const idToken = result.getIdToken();
+            const idToken: any = result.getIdToken();
+            console.log('idToken', idToken);
             // const accessToken = result.getAccessToken();
-            const accessToken = result.getIdToken();
-            console.log(accessToken.payload.sub);
+            // const accessToken = result.getIdToken();
+            // console.log(accessToken.payload.sub);
             const response: SigninResponse = {
               status: true,
               message: 'success',
               sub: idToken.payload.sub,
               name: idToken.payload.name,
               gender: idToken.payload.gender,
-              idToken: accessToken.getJwtToken()
+              groups: idToken?.payload?.['cognito:groups'],
+              idToken: idToken.getJwtToken()
             };
             resolve(response);
           },
@@ -240,4 +248,23 @@ export class CognitoService {
       }
     });
   };
+
+  async assignGroup(username: string) {
+    try {
+      const params = {
+        GroupName: config.customerGroup,
+        UserPoolId: config.cognitoUserpoolId!,
+        Username: username
+      };
+      this.cognitoClient.adminAddUserToGroup(params, (err, data) => {
+        return new Promise((resolve, reject) => {
+          if (err) reject(err);
+          resolve(data);
+        });
+      });
+    } catch (error) {
+      console.error('CongnitoService assignGroup error', error);
+      throw error;
+    }
+  }
 }

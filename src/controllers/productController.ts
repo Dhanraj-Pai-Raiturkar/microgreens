@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import ProductRepository from '../repository/ProductRepository';
+import { constructQuery } from '../lib/repositoryLib';
 
 class ProductController {
   productRepository;
@@ -22,8 +23,8 @@ class ProductController {
 
   async read(req: Request, res: Response) {
     try {
-      const id = req?.query?.id?.toString();
-      const response = await this.productRepository.read(id);
+      const query = constructQuery(req, ['title', 'description']);
+      const response = await this.productRepository.read(query);
       res.status(200).send({
         status: true,
         message: 'success',

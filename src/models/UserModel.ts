@@ -1,6 +1,25 @@
 import mongoose from 'mongoose';
 
-export const UserModelSchema = new mongoose.Schema(
+export type UserModelType = {
+  sub: string;
+  firstName: string;
+  lastName?: string;
+  gender?: string;
+  dob: Date;
+  email: string;
+  mobile?: string;
+  countryCode?: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: number;
+  addressLine1: string;
+  addressLine2: string;
+  verified: string;
+  role: string;
+};
+
+export const UserModelSchema = new mongoose.Schema<UserModelType>(
   {
     sub: {
       type: String,
