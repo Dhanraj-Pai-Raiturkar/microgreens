@@ -15,12 +15,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CognitoController = void 0;
 const cognitoService_1 = require("../services/cognitoService");
 const validateRequest_1 = __importDefault(require("../lib/validateRequest"));
+const UserRepository_1 = __importDefault(require("../repository/UserRepository"));
 class CognitoController {
     constructor() {
         this.signUp = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const requiredFields = ['name', 'email', 'password', 'gender'];
-                const { name, email, password, gender } = req.body;
+                const requiredFields = [
+                    'firstName',
+                    'lastName',
+                    'email',
+                    'password',
+                    'gender'
+                ];
+                const data = req.body;
+                const { firstName, lastName, gender, email, password } = data;
+                const name = firstName + lastName;
                 if ((0, validateRequest_1.default)(req, res, 'body', requiredFields)) {
                     const response = yield this.cognitoService.signUp({
                         name,
@@ -28,6 +37,10 @@ class CognitoController {
                         password,
                         gender
                     });
+                    data.sub = response === null || response === void 0 ? void 0 : response.userSub;
+                    data.verified = false;
+                    data.role = 'shopper';
+                    yield this.userRepository.createUser(data);
                     if (response === null || response === void 0 ? void 0 : response.status)
                         res.status(201).json(response);
                     else
@@ -44,14 +57,20 @@ class CognitoController {
                 const requiredFields = ['email', 'confirmationCode'];
                 const { email, confirmationCode } = req.body;
                 if ((0, validateRequest_1.default)(req, res, 'body', requiredFields)) {
-                    const response = yield this.cognitoService.confirmSignUp({
-                        email,
-                        confirmationCode
-                    });
-                    if (response === null || response === void 0 ? void 0 : response.status)
-                        res.status(200).json(response);
+                    const [cognitoResponse, mongoResponse] = yield Promise.all([
+                        yield this.cognitoService.confirmSignUp({
+                            email,
+                            confirmationCode
+                        }),
+                        this.userRepository.updateUser(email, { verified: true })
+                    ]);
+                    console.log('mongoResponse', mongoResponse);
+                    const cognitoSub = mongoResponse.sub;
+                    yield this.cognitoService.assignGroup(cognitoSub);
+                    if (cognitoResponse === null || cognitoResponse === void 0 ? void 0 : cognitoResponse.status)
+                        res.status(200).json(cognitoResponse);
                     else
-                        res.status(400).json(response);
+                        res.status(400).json(cognitoResponse);
                 }
             }
             catch (error) {
@@ -64,11 +83,22 @@ class CognitoController {
                 const requiredFeilds = ['email', 'password'];
                 const { email, password } = req.body;
                 if ((0, validateRequest_1.default)(req, res, 'body', requiredFeilds)) {
-                    const response = yield this.cognitoService.signIn({
-                        email,
-                        password
-                    });
-                    if (response === null || response === void 0 ? void 0 : response.status)
+                    const [cognitoResponse, userResponse] = yield Promise.all([
+                        this.cognitoService.signIn({
+                            email,
+                            password
+                        }),
+                        this.userRepository.findUser(email)
+                    ]);
+                    console.log('cognitoResponse', cognitoResponse);
+                    const response = {
+                        status: cognitoResponse === null || cognitoResponse === void 0 ? void 0 : cognitoResponse.status,
+                        message: cognitoResponse === null || cognitoResponse === void 0 ? void 0 : cognitoResponse.message,
+                        groups: cognitoResponse === null || cognitoResponse === void 0 ? void 0 : cognitoResponse.groups,
+                        idToken: cognitoResponse === null || cognitoResponse === void 0 ? void 0 : cognitoResponse.idToken,
+                        profile: userResponse
+                    };
+                    if (cognitoResponse === null || cognitoResponse === void 0 ? void 0 : cognitoResponse.status)
                         res.status(200).json(response);
                     else
                         res.status(400).json(response);
@@ -148,6 +178,7 @@ class CognitoController {
             }
         });
         this.cognitoService = new cognitoService_1.CognitoService();
+        this.userRepository = new UserRepository_1.default();
     }
 }
 exports.CognitoController = CognitoController;

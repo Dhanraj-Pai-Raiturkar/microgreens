@@ -14,8 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_2 = __importDefault(require("./loaders/express"));
+const mongoose_1 = __importDefault(require("./loaders/mongoose"));
 const runServer = () => __awaiter(void 0, void 0, void 0, function* () {
     const expServer = (0, express_1.default)();
     (0, express_2.default)({ app: expServer });
+    new mongoose_1.default();
+    console.log('mongoose loaded');
 });
 runServer();

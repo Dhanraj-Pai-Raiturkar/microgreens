@@ -16,6 +16,7 @@ exports.CognitoService = void 0;
 const amazon_cognito_identity_js_1 = require("amazon-cognito-identity-js");
 const config_1 = __importDefault(require("../config"));
 const aws_jwt_verify_1 = require("aws-jwt-verify");
+const aws_sdk_1 = require("aws-sdk");
 class CognitoService {
     constructor() {
         this.getCognitoUser = (email) => __awaiter(this, void 0, void 0, function* () {
@@ -90,17 +91,20 @@ class CognitoService {
                     });
                     this.cognitoUser.authenticateUser(authenticationDetails, {
                         onSuccess: (result) => {
+                            var _a;
                             const idToken = result.getIdToken();
+                            console.log('idToken', idToken);
                             // const accessToken = result.getAccessToken();
-                            const accessToken = result.getIdToken();
-                            console.log(accessToken.payload.sub);
+                            // const accessToken = result.getIdToken();
+                            // console.log(accessToken.payload.sub);
                             const response = {
                                 status: true,
                                 message: 'success',
                                 sub: idToken.payload.sub,
                                 name: idToken.payload.name,
                                 gender: idToken.payload.gender,
-                                idToken: accessToken.getJwtToken()
+                                groups: (_a = idToken === null || idToken === void 0 ? void 0 : idToken.payload) === null || _a === void 0 ? void 0 : _a['cognito:groups'],
+                                idToken: idToken.getJwtToken()
                             };
                             resolve(response);
                         },
@@ -205,6 +209,31 @@ class CognitoService {
             userPoolId: config_1.default.cognitoUserpoolId
             // clientId: config.cognitoClientId,
             // tokenUse: 'access'
+        });
+        this.cognitoClient = new aws_sdk_1.CognitoIdentityServiceProvider({
+            region: config_1.default.cognitoRegion
+        });
+    }
+    assignGroup(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const params = {
+                    GroupName: config_1.default.customerGroup,
+                    UserPoolId: config_1.default.cognitoUserpoolId,
+                    Username: username
+                };
+                this.cognitoClient.adminAddUserToGroup(params, (err, data) => {
+                    return new Promise((resolve, reject) => {
+                        if (err)
+                            reject(err);
+                        resolve(data);
+                    });
+                });
+            }
+            catch (error) {
+                console.error('CongnitoService assignGroup error', error);
+                throw error;
+            }
         });
     }
 }
