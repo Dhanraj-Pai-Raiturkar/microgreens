@@ -40,7 +40,7 @@ class CognitoController {
                     data.sub = response === null || response === void 0 ? void 0 : response.userSub;
                     data.verified = false;
                     data.role = 'shopper';
-                    yield this.userRepository.createUser(data);
+                    yield this.userRepository.create(data);
                     if (response === null || response === void 0 ? void 0 : response.status)
                         res.status(201).json(response);
                     else
@@ -62,7 +62,7 @@ class CognitoController {
                             email,
                             confirmationCode
                         }),
-                        this.userRepository.updateUser(email, { verified: true })
+                        this.userRepository.update(email, { verified: true })
                     ]);
                     console.log('mongoResponse', mongoResponse);
                     const cognitoSub = mongoResponse.sub;
@@ -88,7 +88,7 @@ class CognitoController {
                             email,
                             password
                         }),
-                        this.userRepository.findUser(email)
+                        this.userRepository.read({ email })
                     ]);
                     console.log('cognitoResponse', cognitoResponse);
                     const response = {

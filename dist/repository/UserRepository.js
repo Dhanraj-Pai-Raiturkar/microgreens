@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const UserModel_1 = __importDefault(require("../models/UserModel"));
 class UserRepository {
     constructor() { }
-    createUser(user) {
+    create(user) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const response = new UserModel_1.default(user);
@@ -29,10 +29,10 @@ class UserRepository {
             }
         });
     }
-    findUser(email) {
+    read(query) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = yield UserModel_1.default.findOne({ email }).exec();
+                const response = yield UserModel_1.default.find(query).exec();
                 console.log('UserRepository::createUser user found', response);
                 return response;
             }
@@ -42,12 +42,23 @@ class UserRepository {
             }
         });
     }
-    updateUser(email, data) {
+    update(email, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const response = yield UserModel_1.default.findOneAndUpdate({ email }, data);
                 console.log('UserRepository::updateUser update response', response);
                 return response;
+            }
+            catch (error) {
+                console.error('UserRepository createUser error', error);
+                throw error;
+            }
+        });
+    }
+    delete(sub) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield UserModel_1.default.deleteOne({ sub });
             }
             catch (error) {
                 console.error('UserRepository createUser error', error);

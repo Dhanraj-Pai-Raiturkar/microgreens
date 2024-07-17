@@ -236,5 +236,26 @@ class CognitoService {
             }
         });
     }
+    deleteCognitoUser(sub) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const params = {
+                    UserPoolId: config_1.default.cognitoUserpoolId,
+                    Username: sub
+                };
+                this.cognitoClient.adminDeleteUser(params, (err, data) => {
+                    return new Promise((resolve, reject) => {
+                        if (err)
+                            reject(err);
+                        resolve(data);
+                    });
+                });
+            }
+            catch (error) {
+                console.error('CongnitoService deleteCognitoUser error', error);
+                throw error;
+            }
+        });
+    }
 }
 exports.CognitoService = CognitoService;
