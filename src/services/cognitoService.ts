@@ -267,4 +267,22 @@ export class CognitoService {
       throw error;
     }
   }
+
+  async deleteCognitoUser(sub: string) {
+    try {
+      const params = {
+        UserPoolId: config.cognitoUserpoolId!,
+        Username: sub
+      };
+      this.cognitoClient.adminDeleteUser(params, (err, data) => {
+        return new Promise((resolve, reject) => {
+          if (err) reject(err);
+          resolve(data);
+        });
+      });
+    } catch (error) {
+      console.error('CongnitoService deleteCognitoUser error', error);
+      throw error;
+    }
+  }
 }

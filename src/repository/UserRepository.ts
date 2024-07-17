@@ -3,7 +3,7 @@ import UserModel, { UserModelType } from '../models/UserModel';
 class UserRepository {
   constructor() {}
 
-  async createUser(user: UserModelType) {
+  async create(user: UserModelType) {
     try {
       const response = new UserModel(user);
       const data = await response.save();
@@ -15,9 +15,9 @@ class UserRepository {
     }
   }
 
-  async findUser(email: string) {
+  async read(query: any) {
     try {
-      const response = await UserModel.findOne({ email }).exec();
+      const response = await UserModel.find(query).exec();
       console.log('UserRepository::createUser user found', response);
       return response;
     } catch (error) {
@@ -26,11 +26,20 @@ class UserRepository {
     }
   }
 
-  async updateUser(email: string, data: any) {
+  async update(email: string, data: any) {
     try {
       const response = await UserModel.findOneAndUpdate({ email }, data);
       console.log('UserRepository::updateUser update response', response);
       return response;
+    } catch (error) {
+      console.error('UserRepository createUser error', error);
+      throw error;
+    }
+  }
+
+  async delete(sub: string) {
+    try {
+      await UserModel.deleteOne({ sub });
     } catch (error) {
       console.error('UserRepository createUser error', error);
       throw error;
