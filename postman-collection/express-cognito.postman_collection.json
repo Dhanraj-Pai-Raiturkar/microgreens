@@ -7,205 +7,520 @@
 	},
 	"item": [
 		{
-			"name": "/sign-up",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Dhanraj\",\n    \"gender\": \"Male\",\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"password\": \"Test@123\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Product",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"j\",\n    \"description\": \"j description\",\n    \"category\": \"four\",\n    \"contents\": [\n        \"j1\",\n        \"j2\"\n    ],\n    \"images\": [\n        \"img1\",\n        \"img2\"\n    ],\n    \"thumbnail\": \"thumbnail\",\n    \"price\": 900,\n    \"discount\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}product",
+							"host": [
+								"{{local}}product"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dev}}auth/sign-up",
-					"host": [
-						"{{dev}}auth"
-					],
-					"path": [
-						"sign-up"
-					]
+				{
+					"name": "read",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}product",
+							"host": [
+								"{{local}}product"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "455724d0-9ddd-402e-a3fe-6ff5477a8db9",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"price\": 26\n    // \"description\": \"Kit Y description here\"\n    // \"category\": \"Kit\",\n    // \"contents\": [\n    //     \"tray\",\n    //     \"net\"\n    // ],\n    // \"images\": [\n    //     \"img1\",\n    //     \"img2\"\n    // ],\n    // \"thumbnail\": \"thumbnail\",\n    // \"price\": 550,\n    // \"discount\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}product?id=455724d0-9ddd-402e-a3fe-6ff5477a8db9",
+							"host": [
+								"{{local}}product"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "455724d0-9ddd-402e-a3fe-6ff5477a8db9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}product?id=5ed1f608-5b7e-4c65-be14-eca19831f051",
+							"host": [
+								"{{local}}product"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5ed1f608-5b7e-4c65-be14-eca19831f051"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "/confirm-sign-up",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"confirmationCode\": \"734022\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Auth",
+			"item": [
+				{
+					"name": "sign_up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{dev}}auth/confirm-sign-up",
-					"host": [
-						"{{dev}}auth"
 					],
-					"path": [
-						"confirm-sign-up"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"dark\",\n    \"lastName\": \"matter\",\n    \"gender\": \"Male\",\n    \"dob\": \"1974/03/10\",\n    \"email\": \"dark.matter@yopmail.com\",\n    \"mobile\": \"\",\n    \"countryCode\": \"\",\n    \"password\": \"Test@123\",\n    \"city\": \"Assolna\",\n    \"state\": \"Goa\",\n    \"country\": \"India\",\n    \"pincode\": 403545,\n    \"addressLine1\": \"Opposite main road\",\n    \"addressLine2\": \"Adjacent to Assolna Police Station\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}auth/sign-up",
+							"host": [
+								"{{local}}auth"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm_sign_up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"dark.matter@yopmail.com\",\n    \"confirmationCode\": \"502329\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}auth/confirm-sign-up",
+							"host": [
+								"{{local}}auth"
+							],
+							"path": [
+								"confirm-sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resend_confirm",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}auth/resend-confirm?email=customer2@yopmail.com",
+							"host": [
+								"{{local}}auth"
+							],
+							"path": [
+								"resend-confirm"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "customer2@yopmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign_in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json()",
+									"const idToken = response.idToken",
+									"const groups = response.groups",
+									"if(groups.includes(\"admin\")){",
+									"    pm.environment.set(\"admin_jwt\", idToken)",
+									"}else if(groups.includes(\"customer\")){",
+									"    pm.environment.set(\"customer_jwt\", idToken)",
+									"}else{",
+									"    pm.environment.set(\"jwt\", idToken)",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // \"email\": \"superadmin@yopmail.com\",\n    \"email\": \"dark.matter@yopmail.com\",\n    \"password\": \"Test@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}auth/sign-in",
+							"host": [
+								"{{local}}auth"
+							],
+							"path": [
+								"sign-in"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}auth/forgot-password",
+							"host": [
+								"{{local}}auth"
+							],
+							"path": [
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"dhanraj@yopmail.com\",\n    \"newPassword\": \"Test@1234\",\n    \"verificationCode\": \"046747\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}auth/confirm-password",
+							"host": [
+								"{{local}}auth"
+							],
+							"path": [
+								"confirm-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change_password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJOZ21WS0wrRXZqZXZZSHdhQzQ5TnJ5OGRuMWZWcHZ1ZEhaZnZNenZyak1ZPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI0MDNkZjVjOS02ODI3LTRjYjctYmM4NS1jODBiYTc0NTQ5NWQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZ2VuZGVyIjoiTWFsZSIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX0dyNmtxUEU1MyIsImNvZ25pdG86dXNlcm5hbWUiOiI0MDNkZjVjOS02ODI3LTRjYjctYmM4NS1jODBiYTc0NTQ5NWQiLCJvcmlnaW5fanRpIjoiMjhlMDViMzMtMDM3NC00ZDZkLTg4MDItZTRjODhjNDNiNjZiIiwiYXVkIjoiaTVja2h2NHNsOTNwaGJ2MXEybDd1a3IzMiIsImV2ZW50X2lkIjoiMTA3NDE0NTItYzZhNC00YmRiLWEzZTQtNDMwNjk1ZjFkODIzIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3MDA5ODQyMTgsIm5hbWUiOiJEaGFucmFqIiwiZXhwIjoxNzAwOTg3ODE4LCJpYXQiOjE3MDA5ODQyMTgsImp0aSI6ImNkNmVkNTY5LTRkNzAtNDM3NC1hOWY3LWRjZTM4MzIwMWYwYSIsImVtYWlsIjoiZGhhbnJhai5yYWl0dXJrYXJAZ21haWwuY29tIn0.cgPHjLZ7dsVDLA2PST6pNd1hXvJg-X--8Swj-bSFt2KUsIiKFxjN0sH9Qipfl382p1Xp8eqB8D_7-0_uKGdhW81YVPFOaXFytZEWnNo3gY5a8jBvV5kDjTeT01JYxJNJv37-RpY_mjYZYQenbCi5oFVAFsIPtBVKTZDvonm5MGCx-yqpb_98fypusgfhb-5DBJpFDeZY1A7_HNKx_9w8AW9ABlOu1_2Y5VLUCZvxJ4fwD16NbbKkRTosDa4bIqNLnBUfFh1e5hfq8hCD1Fh4-HKVzPj4pUDrLaU34AuXx8bSipXDlWISFULw5Yd6200eTdVHHpy_xl-mkXW2h248yw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"dhanraj@yopmail.com\",\n    \"oldPassword\": \"Test@123\",\n    \"newPassword\": \"Test@1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}auth/change-password",
+							"host": [
+								"{{local}}auth"
+							],
+							"path": [
+								"change-password"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "/forgot-password",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "User",
+			"item": [
+				{
+					"name": "read",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}user",
+							"host": [
+								"{{local}}user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "455724d0-9ddd-402e-a3fe-6ff5477a8db9",
+									"disabled": true
+								}
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dev}}auth/forgot-password",
-					"host": [
-						"{{dev}}auth"
-					],
-					"path": [
-						"forgot-password"
-					]
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}user?email=cg.two@yopmail.com",
+							"host": [
+								"{{local}}user"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "cg.two@yopmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}user?sub=f35dc936-f1d3-43a7-b8a6-2a17aee58f29",
+							"host": [
+								"{{local}}user"
+							],
+							"query": [
+								{
+									"key": "sub",
+									"value": "f35dc936-f1d3-43a7-b8a6-2a17aee58f29"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "/confirm-password",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"newPassword\": \"Test@123\",\n    \"verificationCode\": \"892640\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{dev}}auth/confirm-password",
-					"host": [
-						"{{dev}}auth"
-					],
-					"path": [
-						"confirm-password"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/change-password",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"oldPassword\": \"Dhan@8897\",\n    \"newPassword\": \"Test@123\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{dev}}auth/change-password",
-					"host": [
-						"{{dev}}auth"
-					],
-					"path": [
-						"change-password"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/resend-confirm",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
+			"name": "status",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "{{dev}}auth/resend-confirm?email=dhanraj.raiturkar@gmail.com",
+					"raw": "{{container}}status",
 					"host": [
-						"{{dev}}auth"
-					],
-					"path": [
-						"resend-confirm"
+						"{{container}}status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}test?search=kit&filter=price:lte:50",
+					"host": [
+						"{{local}}test"
 					],
 					"query": [
 						{
-							"key": "email",
-							"value": "dhanraj.raiturkar@gmail.com"
+							"key": "search",
+							"value": "kit"
+						},
+						{
+							"key": "filter",
+							"value": "price:lte:50"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/sign-in",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"dhanraj.raiturkar@gmail.com\",\n    \"password\": \"Test@123\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{dev}}auth/sign-in",
-					"host": [
-						"{{dev}}auth"
-					],
-					"path": [
-						"sign-in"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/status",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{dev}}status",
-					"host": [
-						"{{dev}}status"
 					]
 				}
 			},
