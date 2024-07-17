@@ -30,7 +30,7 @@ npm run prod
 1. Pull the docker image from docker hub
 
 ```
-docker pull dhanraj8897/node-microgreens
+docker pull IMAGE_NAME
 ```
 
 2. List docker images to ensure image is pulled
