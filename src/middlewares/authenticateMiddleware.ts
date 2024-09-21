@@ -6,7 +6,7 @@ const authenticateJwt = async (
   next: NextFunction
 ) => {
   try {
-    const token = req?.headers?.authorization?.split(' ')[1];
+    const token = req?.headers?.cookie?.split('=')?.[1];
     if (token) {
       const response = await verify(token);
       console.log('resposne: ', response);

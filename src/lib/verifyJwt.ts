@@ -1,7 +1,7 @@
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
 import config from '../config';
 
-const verify = async (token: string) => {
+const verify = async (token: any) => {
   return new Promise(async (resolve, reject) => {
     try {
       const verifier = CognitoJwtVerifier.create({

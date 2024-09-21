@@ -86,7 +86,11 @@ export class CognitoController {
           idToken: cognitoResponse?.idToken,
           profile: userResponse
         };
-        if (cognitoResponse?.status) res.status(200).json(response);
+        const responseHeaders = {
+          'set-cookie': `session=${response.idToken}; HttpOnly; Path=/`
+        };
+        if (cognitoResponse?.status)
+          res.status(200).set(responseHeaders).json(response);
         else res.status(400).json(response);
       }
     } catch (error) {
