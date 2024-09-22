@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticateJwt = void 0;
 const verifyJwt_1 = require("../lib/verifyJwt");
 const authenticateJwt = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c;
     try {
-        const token = (_b = (_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+        const token = (_c = (_b = (_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.cookie) === null || _b === void 0 ? void 0 : _b.split('=')) === null || _c === void 0 ? void 0 : _c[1];
         if (token) {
             const response = yield (0, verifyJwt_1.verify)(token);
             console.log('resposne: ', response);

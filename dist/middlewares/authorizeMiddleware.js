@@ -13,13 +13,13 @@ exports.authorizeJwt = void 0;
 const verifyJwt_1 = require("../lib/verifyJwt");
 const authorizeJwt = (role) => {
     return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         try {
-            const token = (_b = (_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+            const token = (_c = (_b = (_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.cookie) === null || _b === void 0 ? void 0 : _b.split('=')) === null || _c === void 0 ? void 0 : _c[1];
             if (token) {
                 const response = yield (0, verifyJwt_1.verify)(token);
                 console.log('response', response);
-                if (role.includes((_c = response === null || response === void 0 ? void 0 : response['cognito:groups']) === null || _c === void 0 ? void 0 : _c[0]))
+                if (role.includes((_d = response === null || response === void 0 ? void 0 : response['cognito:groups']) === null || _d === void 0 ? void 0 : _d[0]))
                     next();
                 else
                     res.status(401).json({ status: false, message: 'unauthorized' });

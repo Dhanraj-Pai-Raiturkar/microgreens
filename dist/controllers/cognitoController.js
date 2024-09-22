@@ -98,8 +98,11 @@ class CognitoController {
                         idToken: cognitoResponse === null || cognitoResponse === void 0 ? void 0 : cognitoResponse.idToken,
                         profile: userResponse
                     };
+                    const responseHeaders = {
+                        'set-cookie': `session=${response.idToken}; HttpOnly; Path=/`
+                    };
                     if (cognitoResponse === null || cognitoResponse === void 0 ? void 0 : cognitoResponse.status)
-                        res.status(200).json(response);
+                        res.status(200).set(responseHeaders).json(response);
                     else
                         res.status(400).json(response);
                 }
