@@ -27,7 +27,7 @@ exports.default = ({ app }) => __awaiter(void 0, void 0, void 0, function* () {
         contentSecurityPolicy: false
     }));
     app.use((0, cors_1.default)({
-        origin: 'http://localhost:3000',
+        origin: 'https://microgreensui.netlify.app/',
         credentials: true
     }));
     app.use(body_parser_1.default.urlencoded({ extended: true }));
