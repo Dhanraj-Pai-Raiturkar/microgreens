@@ -58,26 +58,26 @@ export const UserModelSchema = new mongoose.Schema<UserModelType>(
     countryCode: Number,
     city: {
       type: String,
-      required: true,
+      required: false,
       index: true
     },
     state: {
       type: String,
-      required: true,
+      required: false,
       index: true
     },
     country: {
       type: String,
-      required: true,
+      required: false,
       index: true
     },
     pincode: {
       type: Number,
-      required: true
+      required: false
     },
     addressLine1: {
       type: String,
-      required: true
+      required: false
     },
     addressLine2: String,
     verified: Boolean,
