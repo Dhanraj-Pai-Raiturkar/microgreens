@@ -23,7 +23,7 @@ export default async ({ app }: { app: Express }): Promise<void> => {
   );
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: 'https://microgreensui.netlify.app/',
       credentials: true
     })
   );
